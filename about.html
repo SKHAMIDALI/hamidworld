@@ -75,6 +75,31 @@
             font-weight: bold;
             pointer-events: none;
         }
+         .speech {
+    /* margin-left: 200px;  <-- REMOVE THIS LINE */
+          width: 100%;         /* <-- ADD THIS LINE */
+          height: 300px;
+          display: flex;
+          flex-direction: column;
+          justify-content: center; 
+          align-items: center;     
+          text-align: center;
+        }
+/* This targets the paragraph inside the speech div */
+    .speech p {
+       font-family: 'Poppins', sans-serif;
+       font-size: 18px;       /* Makes it readable */
+       font-weight: 300;      /* 300 is 'Light' - looks very elegant */
+       letter-spacing: 1px;   /* Adds a little space between letters */
+       opacity: 0.9;          /* Slightly transparent for a premium feel */
+       margin-top: 10px;      /* Spacing from the main heading */
+      }
+
+     #author {
+      font-size: 20px;       /* Smaller font for the author */    
+      font-weight: 400;      /* Regular weight for the author */
+      opacity: 0.8;     /* More transparent for the author */   
+      }
 
         /* ABOUT SECTION */
         .about-section {
@@ -101,14 +126,14 @@
             object-fit: cover;
         }
         @keyframes slidePicFromRight {
-    from {
+         from {
         opacity: 0;
         transform: translateX(180px);
-    }
-    to {
+         }
+        to {
         opacity: 1;
         transform: translateX(0);
-    }
+        }
      }
 
      .profile-pic {
@@ -116,14 +141,27 @@
       }
 
         /* WRAPPER */
-.profile-wrapper {
+    .profile-wrapper {
     display: flex;
     flex-direction: column;
     align-items: center;
-}
+    } 
+    .profile-wrapper {
+    transition: transform 1.25s cubic-bezier(0.22, 1, 0.36, 1);
+   }
 
-/* TRANSPARENT DIV BELOW IMAGE */
-.profile-label {
+
+    .profile-wrapper.move-center {
+    transform: translateX(250px);
+    }
+
+/* Scroll up → move back left */
+     .profile-wrapper.move-left {
+    transform: translateX(0);
+    }
+
+    /* TRANSPARENT DIV BELOW IMAGE */
+   .profile-label {
     margin-top: 10px; /* EXACT GAP */
     padding: 10px 16px;
     background: transparent;
@@ -163,8 +201,8 @@
     to {
         opacity: 1;
         transform: translateX(0);
-    }
-}
+       }
+   }
 
 .profile-label {
     animation: slideFromRight 2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
@@ -184,15 +222,19 @@
         .about-text p {
             line-height: 1.6;
         }
+
+        
+
+        
         @keyframes slideFromLeft {
-    from {
-        opacity: 0;
-        transform: translateX(-200px);
-    }
-    to {
+        from {
+          opacity: 0;
+          transform: translateX(-200px);
+        }
+        to {
         opacity: 1;
         transform: translateX(0);
-    }
+        }
 }
 
 .about-text {
@@ -296,6 +338,13 @@
         </div>
         <div class="nav-title">ABOUT</div>
     </div>
+    <div class = "speech">
+        <h1>Welcome to My Portfolio</h1>
+        <p>“It has become appallingly obvious that our technology has exceeded our humanity.”</p>
+        <p id="author">     By ------------― Albert Einstein</p>
+
+    </div>
+
 
     <!-- ABOUT -->
     <div class="about-section">
@@ -322,6 +371,27 @@
                and staying adaptable in a fast-changing tech world.
                This website is a reflection of my journey—showcasing my work, my skills,
                and my passion for building meaningful and practical solutions
+            </p>
+            <p>
+               
+             I am a Computer Science Engineering student based in West Bengal, India, with a passion for building 
+             technology that solves real-world problems. My journey involves a strong foundation in 
+             <strong>C programming and Data Structures</strong>, blended with a creative flair for 
+             <strong>Web Development</strong> and <strong>Generative AI</strong>.
+            </p>
+            <p>
+              Currently, I am working on <em>"Remedy Trackers,"</em> a drone-based solution designed for the 
+              Smart India Hackathon 2025. Whether it's optimizing algorithms or designing intuitive user interfaces, 
+              I am always looking for the next challenge to turn innovative ideas into reality.
+
+            </p>
+            <p>
+            When I'm not coding, you can find me exploring the latest tech trends, 
+            contributing to open-source projects, or sharing insights on my blog.
+            Let's connect and create something amazing together!
+            </p>
+            <p>
+             The basic skill of <strong>DATA SCIENCE | MACHINE LEARNING</strong> I  have gained . 
             </p>
         </div>
     </div>
@@ -359,6 +429,40 @@
 
         <p class="footer-text">© 2026 | Built with passion</p>
     </footer>
+  
+    <script>
+    let lastScrollY = window.scrollY;
+
+    const profileWrapper = document.querySelector(".profile-wrapper");
+    const aboutText = document.querySelector(".about-text");
+
+    // set initial states
+    profileWrapper.classList.add("move-left");
+    aboutText.classList.add("move-right");
+
+    window.addEventListener("scroll", () => {
+        const currentScrollY = window.scrollY;
+
+        if (currentScrollY > lastScrollY) {
+            // ⬇️ scrolling DOWN → both move to center
+            profileWrapper.classList.add("move-center");
+            profileWrapper.classList.remove("move-left");
+
+            aboutText.classList.add("move-center");
+            aboutText.classList.remove("move-right");
+        } else {
+            // ⬆️ scrolling UP → both move away from center
+            profileWrapper.classList.add("move-left");
+            profileWrapper.classList.remove("move-center");
+
+            aboutText.classList.add("move-right");
+            aboutText.classList.remove("move-center");
+        }
+
+        lastScrollY = currentScrollY <= 0 ? 0 : currentScrollY;
+    });
+</script>
 
 </body>
 </html>
+

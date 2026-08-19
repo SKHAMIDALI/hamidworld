@@ -76,8 +76,7 @@
             pointer-events: none;
         }
          .speech {
-    /* margin-left: 200px;  <-- REMOVE THIS LINE */
-          width: 100%;         /* <-- ADD THIS LINE */
+          width: 100%;
           height: 300px;
           display: flex;
           flex-direction: column;
@@ -85,20 +84,19 @@
           align-items: center;     
           text-align: center;
         }
-/* This targets the paragraph inside the speech div */
     .speech p {
        font-family: 'Poppins', sans-serif;
-       font-size: 18px;       /* Makes it readable */
-       font-weight: 300;      /* 300 is 'Light' - looks very elegant */
-       letter-spacing: 1px;   /* Adds a little space between letters */
-       opacity: 0.9;          /* Slightly transparent for a premium feel */
-       margin-top: 10px;      /* Spacing from the main heading */
+       font-size: 18px;
+       font-weight: 300;
+       letter-spacing: 1px;
+       opacity: 0.9;
+       margin-top: 10px;
       }
 
      #author {
-      font-size: 20px;       /* Smaller font for the author */    
-      font-weight: 400;      /* Regular weight for the author */
-      opacity: 0.8;     /* More transparent for the author */   
+      font-size: 20px;
+      font-weight: 400;
+      opacity: 0.8;
       }
 
         /* ABOUT SECTION */
@@ -124,45 +122,34 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
+            pointer-events: none;
         }
-        @keyframes slidePicFromRight {
-         from {
-        opacity: 0;
-        transform: translateX(180px);
-         }
-        to {
-        opacity: 1;
-        transform: translateX(0);
-        }
+
+     /* Interactive tilt wrapper (perspective must live on the parent,
+        not the clipped/rounded element, so the tilt reads in 3D) */
+     .profile-pic-tilt {
+        perspective: 700px;
      }
 
      .profile-pic {
-    animation: slidePicFromRight 2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        transform-style: preserve-3d;
+        transition: transform 0.2s ease-out, box-shadow 0.3s ease;
+        cursor: pointer;
       }
+
+    .profile-pic:hover {
+        box-shadow: 0 14px 34px rgba(28, 2, 41, 0.35);
+    }
 
         /* WRAPPER */
     .profile-wrapper {
     display: flex;
     flex-direction: column;
     align-items: center;
-    } 
-    .profile-wrapper {
-    transition: transform 1.25s cubic-bezier(0.22, 1, 0.36, 1);
-   }
-
-
-    .profile-wrapper.move-center {
-    transform: translateX(250px);
     }
 
-/* Scroll up → move back left */
-     .profile-wrapper.move-left {
-    transform: translateX(0);
-    }
-
-    /* TRANSPARENT DIV BELOW IMAGE */
    .profile-label {
-    margin-top: 10px; /* EXACT GAP */
+    margin-top: 10px;
     padding: 10px 16px;
     background: transparent;
     backdrop-filter: blur(8px);
@@ -172,7 +159,6 @@
     gap: 6px;
 }
 
-/* TEXT STYLES */
 .profile-label .hi {
     font-size: 100px;
     font-weight: 1000;
@@ -192,27 +178,30 @@
     color: #2c0d3f;
     font-family: Brush Script MT, cursive;
     font-style: italic;
-}    
-   @keyframes slideFromRight {
-    from {
-        opacity: 0;
-        transform: translateX(120px); /* MUCH farther right */
-    }
-    to {
-        opacity: 1;
-        transform: translateX(0);
-       }
-   }
-
-.profile-label {
-    animation: slideFromRight 2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
+/* SCROLL-TRIGGERED REVEAL (fires once, when the about section enters view) */
+.profile-pic-tilt,
+.profile-label,
+.about-text {
+    opacity: 0;
+    transition: opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1),
+                transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+}
 
+.profile-pic-tilt { transform: translateX(90px); transition-delay: 0.05s; }
+.profile-label    { transform: translateX(60px);  transition-delay: 0.25s; }
+.about-text        { transform: translateX(-90px); transition-delay: 0.15s; }
 
+.about-section.in-view .profile-pic-tilt,
+.about-section.in-view .profile-label,
+.about-section.in-view .about-text {
+    opacity: 1;
+    transform: translateX(0);
+}
 
         .about-text {
-            max-width: 400px;
+            max-width: 800px;
         }
 
         .about-text h2 {
@@ -223,50 +212,315 @@
             line-height: 1.6;
         }
 
-        
-
-        
-        @keyframes slideFromLeft {
-        from {
-          opacity: 0;
-          transform: translateX(-200px);
-        }
-        to {
-        opacity: 1;
-        transform: translateX(0);
-        }
+/* RESUME BUTTON */
+.resume-btn {
+    position: relative;
+    overflow: hidden;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 24px;
+    padding: 14px 30px;
+    background: #2c0d3f;
+    color: #fcfcfc;
+    border: none;
+    border-radius: 999px;
+    font-size: 15px;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    box-shadow: 0 6px 18px rgba(44, 13, 63, 0.35);
 }
 
-.about-text {
-    animation: slideFromLeft 2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+.resume-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 24px rgba(44, 13, 63, 0.5);
 }
 
+.ripple {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.55);
+    transform: scale(0);
+    animation: rippleAnim 0.6s linear;
+    pointer-events: none;
+}
 
-        /* WORK SECTION */
-        .work-section {
-            padding: 80px 20px;
-            color: #2c0d3f;
-            text-align: center;
-        }
+@keyframes rippleAnim {
+    to {
+        transform: scale(3.5);
+        opacity: 0;
+    }
+}
 
-        .work-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            margin-top: 40px;
-        }
+/* TIMELINE SECTION */
+.timeline-section {
+    padding: 80px 20px;
+    color: #2c0d3f;
+    text-align: center;
+    background: rgba(255,255,255,0.4);
+}
 
-        .work-card {
-            background: #2c0d3f;
-            color: #fff;
-            padding: 40px 20px;
-            border-radius: 10px;
-            transition: transform 0.3s;
-        }
+.timeline-section h2 {
+    margin-bottom: 60px;
+}
 
-        .work-card:hover {
-            transform: translateY(-10px);
-        }
+.timeline {
+    position: relative;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.timeline::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: #2c0d3f;
+    transform: translateX(-50%);
+}
+
+.timeline-item {
+    position: relative;
+    width: 50%;
+    padding: 20px 40px;
+    box-sizing: border-box;
+    text-align: left;
+}
+
+.timeline-item:nth-child(odd) {
+    left: 0;
+    text-align: right;
+}
+
+.timeline-item:nth-child(even) {
+    left: 50%;
+    text-align: left;
+}
+
+.timeline-item .dot {
+    position: absolute;
+    top: 26px;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #2c0d3f;
+    border: 3px solid #fcfcfc;
+}
+
+.timeline-item:nth-child(odd) .dot {
+    right: -8px;
+}
+
+.timeline-item:nth-child(even) .dot {
+    left: -8px;
+}
+
+.timeline-item .year {
+    font-weight: bold;
+    font-size: 14px;
+    opacity: 0.7;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.timeline-item h3 {
+    margin: 6px 0;
+}
+
+.timeline-item p {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+@media (max-width: 700px) {
+    .timeline::before { left: 12px; }
+    .timeline-item, .timeline-item:nth-child(odd), .timeline-item:nth-child(even) {
+        width: 100%;
+        left: 0;
+        text-align: left;
+        padding-left: 40px;
+        padding-right: 10px;
+    }
+    .timeline-item:nth-child(odd) .dot,
+    .timeline-item:nth-child(even) .dot {
+        left: 4px;
+        right: auto;
+    }
+}
+
+/* SKILL BARS */
+.skills-section {
+    padding: 80px 60px;
+    color: #2c0d3f;
+}
+
+.skills-section h2 {
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+.skill-bars {
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+.skill-row {
+    margin-bottom: 28px;
+}
+
+.skill-row .label-row {
+    display: flex;
+    justify-content: space-between;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.skill-track {
+    width: 100%;
+    height: 14px;
+    background: rgba(44, 13, 63, 0.15);
+    border-radius: 999px;
+    overflow: hidden;
+}
+
+.skill-fill {
+    height: 100%;
+    width: 0%;
+    border-radius: 999px;
+    background: linear-gradient(90deg, #2c0d3f, #7a3aa8);
+    transition: width 1.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* STATS COUNTER */
+.stats-section {
+    padding: 70px 20px;
+    text-align: center;
+    background: #2c0d3f;
+    color: #fcfcfc;
+}
+
+.stats-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 50px;
+    max-width: 900px;
+    margin: 30px auto 0;
+}
+
+.stat-item .stat-number {
+    font-size: 46px;
+    font-weight: 800;
+}
+
+.stat-item .stat-label {
+    margin-top: 6px;
+    font-size: 14px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    opacity: 0.8;
+}
+
+/* TECH STACK ICONS */
+.stack-section {
+    padding: 80px 20px;
+    text-align: center;
+    color: #2c0d3f;
+}
+
+.stack-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+    gap: 24px;
+    max-width: 700px;
+    margin: 40px auto 0;
+}
+
+.stack-icon {
+    position: relative;
+    background: rgba(44, 13, 63, 0.08);
+    border-radius: 14px;
+    padding: 20px 10px;
+    font-size: 32px;
+    cursor: default;
+    transition: transform 0.25s ease, background 0.25s ease;
+}
+
+.stack-icon:hover {
+    transform: translateY(-6px);
+    background: rgba(44, 13, 63, 0.18);
+}
+
+.stack-icon .tooltip {
+    position: absolute;
+    bottom: 110%;
+    left: 50%;
+    transform: translateX(-50%) translateY(6px);
+    background: #2c0d3f;
+    color: #fcfcfc;
+    font-size: 12px;
+    padding: 6px 10px;
+    border-radius: 6px;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.stack-icon:hover .tooltip {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+/* QUOTE BLOCK */
+.quote-section {
+    padding: 90px 20px;
+    text-align: center;
+    position: relative;
+    color: #2c0d3f;
+}
+
+.quote-block {
+    position: relative;
+    max-width: 650px;
+    margin: 0 auto;
+    padding: 20px 30px;
+}
+
+.quote-block .quote-mark {
+    position: absolute;
+    top: -50px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 160px;
+    font-family: Georgia, serif;
+    color: rgba(44, 13, 63, 0.08);
+    z-index: 0;
+    pointer-events: none;
+}
+
+.quote-block blockquote {
+    position: relative;
+    z-index: 1;
+    margin: 0;
+    font-size: 26px;
+    font-style: italic;
+    font-weight: 300;
+    line-height: 1.5;
+}
+
+.quote-block cite {
+    display: block;
+    margin-top: 16px;
+    font-size: 15px;
+    font-style: normal;
+    opacity: 0.7;
+}
 
         /* FOOTER */
         footer {
@@ -294,28 +548,25 @@
             transition: 0.3s ease;
         }
 
-       /* BRAND COLOR HOVER EFFECTS */
 .social-links a.facebook:hover {
-    background: #1877f2; /* Facebook Blue */
+    background: #1877f2;
     color: #fff;
 }
 
 .social-links a.instagram:hover {
-    background: linear-gradient(45deg, #833ab4, #fd1d1d, #fcb045); /* Instagram */
+    background: linear-gradient(45deg, #833ab4, #fd1d1d, #fcb045);
     color: #fff;
 }
 
 .social-links a.youtube:hover {
-    background: #ff0000; /* YouTube Red */
+    background: #ff0000;
     color: #fff;
 }
 
 .social-links a.github:hover {
-    background: #000000; /* GitHub Black */
+    background: #000000;
     color: #fff;
 }
-
-
 
         .footer-text {
             font-size: 14px;
@@ -349,8 +600,10 @@
     <!-- ABOUT -->
     <div class="about-section">
         <div class="profile-wrapper">
-            <div class="profile-pic">
-                <img src="image.png" alt="My Photo">
+            <div class="profile-pic-tilt" id="profilePicTilt">
+                <div class="profile-pic" id="profilePic">
+                    <img src="mypic2.bmp" alt="My Photo">
+                </div>
             </div>
 
             <div class="profile-label">
@@ -393,16 +646,114 @@
             <p>
              The basic skill of <strong>DATA SCIENCE | MACHINE LEARNING</strong> I  have gained . 
             </p>
+
+            <button class="resume-btn" id="resumeBtn">
+                <i class="fas fa-download"></i> Download Resume
+            </button>
         </div>
     </div>
 
-    <!-- WORK -->
-    <div class="work-section">
-        <h2>My Work</h2>
-        <div class="work-grid">
-            <div class="work-card">Project 1</div>
-            <div class="work-card">Project 2</div>
-            <div class="work-card">Project 3</div>
+    <!-- TIMELINE -->
+    <div class="timeline-section">
+        <h2>My Journey</h2>
+        <div class="timeline">
+            <div class="timeline-item">
+                <span class="dot"></span>
+                <div class="year">2024</div>
+                <h3>Started B.Tech in CSE</h3>
+                <p>Began Computer Science Engineering studies in Aliah University, West Bengal, India, building a base in C and Data Structures.</p>
+            </div>
+            <div class="timeline-item">
+                <span class="dot"></span>
+                <div class="year">2024</div>
+                <h3>Discovered Web Development</h3>
+                <p>Started building websites, learning HTML, CSS and JavaScript through hands-on projects.</p>
+            </div>
+            <div class="timeline-item">
+                <span class="dot"></span>
+                <div class="year">2025</div>
+                <h3>Explored Data Science & ML</h3>
+                <p>Picked up the fundamentals of data science and machine learning alongside coursework.</p>
+                <p>Doing Data Analysis and Visualization projects , Using Python libraries like Numpy , Pandas and Matplotlib.</p>
+            </div>
+            <div class="timeline-item">
+                <span class="dot"></span>
+                <div class="year">2025</div>
+                <h3>Smart India Hackathon</h3>
+                <p>Building "Remedy Trackers," a drone-based solution, for Smart India Hackathon 2025.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- SKILL BARS -->
+    <div class="skills-section">
+        <h2 style="text-align:center;">Skills</h2>
+        <div class="skill-bars" id="skillBars">
+            <div class="skill-row">
+                <div class="label-row"><span>C Programming & DSA</span><span>85%</span></div>
+                <div class="skill-track"><div class="skill-fill" data-level="85"></div></div>
+            </div>
+            <div class="skill-row">
+                <div class="label-row"><span>Web Development</span><span>80%</span></div>
+                <div class="skill-track"><div class="skill-fill" data-level="80"></div></div>
+            </div>
+            <div class="skill-row">
+                <div class="label-row"><span>Generative AI</span><span>70%</span></div>
+                <div class="skill-track"><div class="skill-fill" data-level="70"></div></div>
+            </div>
+            <div class="skill-row">
+                <div class="label-row"><span>Data Science & ML</span><span>65%</span></div>
+                <div class="skill-track"><div class="skill-fill" data-level="65"></div></div>
+            </div>
+            <div class="skill-row">
+                <div class="label-row"><span>Data Analyst</span><span>90%</span></div>
+                <div class="skill-track"><div class="skill-fill" data-level="90"></div></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- STATS COUNTER -->
+    <div class="stats-section">
+        <h2>By the Numbers</h2>
+        <div class="stats-grid" id="statsGrid">
+            <div class="stat-item">
+                <div class="stat-number" data-target="15">0</div>
+                <div class="stat-label">Projects</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" data-target="10000">0</div>
+                <div class="stat-label">Lines of Code</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" data-target="4">0</div>
+                <div class="stat-label">Hackathons</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" data-target="6">0</div>
+                <div class="stat-label">Tech Stacks</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TECH STACK ICONS -->
+    <div class="stack-section">
+        <h2>Tech Stack</h2>
+        <div class="stack-grid">
+            <div class="stack-icon"><i class="fab fa-html5"></i><span class="tooltip">HTML — Advanced</span></div>
+            <div class="stack-icon"><i class="fab fa-css3-alt"></i><span class="tooltip">CSS — Advanced</span></div>
+            <div class="stack-icon"><i class="fab fa-js"></i><span class="tooltip">JavaScript — Intermediate</span></div>
+            <div class="stack-icon"><i class="fab fa-python"></i><span class="tooltip">Python — Intermediate</span></div>
+            <div class="stack-icon"><i class="fas fa-code"></i><span class="tooltip">C — Advanced</span></div>
+            <div class="stack-icon"><i class="fab fa-git-alt"></i><span class="tooltip">Git — Intermediate</span></div>
+        </div>
+    </div>
+
+    <!-- QUOTE BLOCK -->
+    <div class="quote-section">
+        <div class="quote-block">
+            <span class="quote-mark">&ldquo;</span>
+            <blockquote>Love to explore technologies.</blockquote>
+            <cite>— Hamid</cite>
         </div>
     </div>
 
@@ -431,38 +782,86 @@
     </footer>
   
     <script>
-    let lastScrollY = window.scrollY;
+    // Reveal the photo, name label, and bio once — when the About section
+    // first scrolls into view. No more re-triggering on every scroll tick.
+    const aboutSection = document.querySelector(".about-section");
+    const revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                aboutSection.classList.add("in-view");
+                revealObserver.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.3 });
+    revealObserver.observe(aboutSection);
 
-    const profileWrapper = document.querySelector(".profile-wrapper");
-    const aboutText = document.querySelector(".about-text");
+    // Interactive 3D tilt on the profile photo, following the cursor
+    const picTilt = document.getElementById("profilePicTilt");
+    const pic = document.getElementById("profilePic");
 
-    // set initial states
-    profileWrapper.classList.add("move-left");
-    aboutText.classList.add("move-right");
-
-    window.addEventListener("scroll", () => {
-        const currentScrollY = window.scrollY;
-
-        if (currentScrollY > lastScrollY) {
-            // ⬇️ scrolling DOWN → both move to center
-            profileWrapper.classList.add("move-center");
-            profileWrapper.classList.remove("move-left");
-
-            aboutText.classList.add("move-center");
-            aboutText.classList.remove("move-right");
-        } else {
-            // ⬆️ scrolling UP → both move away from center
-            profileWrapper.classList.add("move-left");
-            profileWrapper.classList.remove("move-center");
-
-            aboutText.classList.add("move-right");
-            aboutText.classList.remove("move-center");
-        }
-
-        lastScrollY = currentScrollY <= 0 ? 0 : currentScrollY;
+    picTilt.addEventListener("mousemove", (e) => {
+        const rect = pic.getBoundingClientRect();
+        const x = e.clientX - rect.left - rect.width / 2;
+        const y = e.clientY - rect.top - rect.height / 2;
+        const rotateX = (-y / rect.height) * 18;
+        const rotateY = (x / rect.width) * 18;
+        pic.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.05)`;
     });
-</script>
+
+    picTilt.addEventListener("mouseleave", () => {
+        pic.style.transform = "rotateX(0) rotateY(0) scale(1)";
+    });
+
+    // Resume button ripple effect
+    const resumeBtn = document.getElementById('resumeBtn');
+    resumeBtn.addEventListener('click', function (e) {
+        const rect = resumeBtn.getBoundingClientRect();
+        const ripple = document.createElement('span');
+        const size = Math.max(rect.width, rect.height);
+        ripple.className = 'ripple';
+        ripple.style.width = ripple.style.height = size + 'px';
+        ripple.style.left = (e.clientX - rect.left - size / 2) + 'px';
+        ripple.style.top = (e.clientY - rect.top - size / 2) + 'px';
+        resumeBtn.appendChild(ripple);
+        setTimeout(() => ripple.remove(), 600);
+    });
+
+    // Animated skill bars — fill on scroll into view
+    const skillFills = document.querySelectorAll('.skill-fill');
+    const skillObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.width = entry.target.dataset.level + '%';
+                skillObserver.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.4 });
+    skillFills.forEach(fill => skillObserver.observe(fill));
+
+    // Stats counter — count up when visible
+    const statNumbers = document.querySelectorAll('.stat-number');
+    const statsObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const el = entry.target;
+                const target = parseInt(el.dataset.target, 10);
+                const duration = 1500;
+                const startTime = performance.now();
+                function step(now) {
+                    const progress = Math.min((now - startTime) / duration, 1);
+                    const value = Math.floor(progress * target);
+                    el.textContent = value.toLocaleString() + (progress === 1 && target >= 1000 ? '+' : '');
+                    if (progress < 1) requestAnimationFrame(step);
+                    else el.textContent = target.toLocaleString() + (target >= 1000 ? '+' : '');
+                }
+                requestAnimationFrame(step);
+                statsObserver.unobserve(el);
+            }
+        });
+    }, { threshold: 0.5 });
+    statNumbers.forEach(num => statsObserver.observe(num));
+    </script>
 
 </body>
 </html>
-
+</html>
